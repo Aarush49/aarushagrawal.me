@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aarush Agrawal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --accent: #7c6aff;
+      --accent2: #00d4aa;
+      --glow: rgba(124,106,255,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,106,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,106,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glow orb */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,106,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(10,10,15,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    main { position: relative; z-index: 1; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-inner { width: 100%; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.2s;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: var(--accent2);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.35s;
+    }
+
+    h1 .accent { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.5s;
+    }
+
+    .hero-desc strong { color: var(--text); font-weight: 400; }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.65s;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #9580ff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(124,106,255,0.3);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    /* SECTION */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 5rem 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 3rem;
+    }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p strong { color: var(--text); font-weight: 400; }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      padding: 1.2rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(124,106,255,0.3);
+      transform: translateX(4px);
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .project-card {
+      padding: 1.8rem 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      text-decoration: none;
+    }
+
+    .project-card:hover {
+      border-color: rgba(124,106,255,0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,106,255,0.1);
+    }
+
+    .project-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      background: rgba(124,106,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(124,106,255,0.2);
+    }
+
+    .project-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+      transition: color 0.2s, transform 0.2s;
+      margin-top: 0.2rem;
+    }
+
+    .project-card:hover .project-arrow {
+      color: var(--accent);
+      transform: translate(2px, -2px);
+    }
+
+    /* CONTACT */
+    .contact-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 480px;
+    }
+
+    .contact-line {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+
+    .contact-line:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateX(4px);
+    }
+
+    .contact-line .icon {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(124,106,255,0.1);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .contact-label { flex: 1; }
+    .contact-handle { color: var(--accent2); font-size: 0.75rem; }
+
+    /* FOOTER */
+    footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 680px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      section { padding: 3.5rem 1.5rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .project-card { grid-template-columns: 1fr; }
+      .project-arrow { display: none; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Aarush<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag">Available for internships & research</div>
+      <h1>Aarush<br/><span class="accent">Agrawal.</span></h1>
+      <p class="hero-desc">
+        CS student at <strong>UT Dallas</strong> building things at the intersection of 
+        <strong>AI and real-world impact</strong>. From CNNs to full-stack apps — 
+        I like problems that matter.
+      </p>
+      <div class="hero-links">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+        <a href="https://linkedin.com/in/agrawalaarush" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">// about</div>
+    <div class="section-title">Who I am</div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          Hey! I'm Aarush — a CS student at UTD who's into <strong>AI, machine learning,</strong> and building 
+          things that actually solve problems. I work across the full stack, from training 
+          neural networks to shipping full-stack apps.
+        </p>
+        <p>
+          I've presented research at the <strong>New York Academy of Sciences</strong>, built hardware 
+          with piezoelectric sensors and Raspberry Pi, and shipped a multiplayer 
+          cybersecurity game from scratch. I like diving deep and figuring things out.
+        </p>
+        <p>
+          Currently looking for <strong>internships and research opportunities</strong> in AI/ML 
+          where I can keep learning fast and contribute something real.
+        </p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">7+</div>
+          <div class="stat-label">Projects shipped</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">NYAS</div>
+          <div class="stat-label">Research presented at New York Academy of Sciences</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">UTD</div>
+          <div class="stat-label">UT Dallas — Computer Science</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label">// projects</div>
+    <div class="section-title">Things I've built</div>
+    <div class="projects-grid">
+
+      <a href="#" class="project-card">
+        <div>
+          <div class="project-name">CrashOut</div>
+          <div class="project-desc">
+            A multiplayer cybersecurity peer-to-peer learning game inspired by Among Us — 
+            combining learning lobbies, trivia challenges, and hidden hackers for social, interactive learning.
+          </div>
+          <div class="project-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">Full-Stack</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div>
+          <div class="project-name">AI-Enabled Surveillance System</div>
+          <div class="project-desc">
+            Built a robust facial recognition system using CNNs with real-time processing, 
+            adaptability, and a strong focus on user privacy and data security.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Neural Networks</span>
+            <span class="tag">CNN</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div>
+          <div class="project-name">AI Learning Assistant for Visually Impaired Students</div>
+          <div class="project-desc">
+            Researched and presented an AI-powered, voice-dependent UI model aimed at 
+            enhancing the learning experience for blind students — presented at the New York Academy of Sciences.
+          </div>
+          <div class="project-tags">
+            <span class="tag">AI/ML</span>
+            <span class="tag">Voice UI</span>
+            <span class="tag">Research</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div>
+          <div class="project-name">EMG Robotic Hand</div>
+          <div class="project-desc">
+            Constructed a robotic hand that reads electromyographic impulses and replicates 
+            human motor movements in real-time.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Arduino</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">Bioelectronics</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+      <a href="#" class="project-card">
+        <div>
+          <div class="project-name">Ecostride: Power Tile Prototype</div>
+          <div class="project-desc">
+            Built a footstep energy generation system using piezoelectric sensors and recycled 
+            plastic — designed for real-world sustainability impact.
+          </div>
+          <div class="project-tags">
+            <span class="tag">Circuit Design</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">Sustainability</span>
+          </div>
+        </div>
+        <div class="project-arrow">↗</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">// contact</div>
+    <div class="section-title">Let's talk</div>
+    <div class="contact-inner">
+      <a href="https://linkedin.com/in/agrawalaarush" target="_blank" class="contact-line">
+        <div class="icon">in</div>
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-handle">agrawalaarush ↗</span>
+      </a>
+      <a href="https://github.com" target="_blank" class="contact-line">
+        <div class="icon">gh</div>
+        <span class="contact-label">GitHub</span>
+        <span class="contact-handle">view repos ↗</span>
+      </a>
+      <a href="/cdn-cgi/l/email-protection#3958584b4c4a51795c41585449555c175a5654" class="contact-line">
+        <div class="icon">@</div>
+        <span class="contact-label">Email</span>
+        <span class="contact-handle">say hello ↗</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Aarush Agrawal</p>
+  <p>Built with i
